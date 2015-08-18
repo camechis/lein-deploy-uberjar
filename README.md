@@ -8,7 +8,7 @@ defined repository in the project.
 Add this to your plugins section in your project.clj
 
 ```clojure
-[camechis/deploy-uberjar "0.1.0"]
+[camechis/deploy-uberjar "0.2.0"]
 ```
 
 The following will deploy the uberjar to the release repository

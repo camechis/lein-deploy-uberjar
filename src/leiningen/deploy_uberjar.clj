@@ -1,7 +1,8 @@
 (ns leiningen.deploy-uberjar
   (:require [leiningen.uberjar :as luber]
             [leiningen.pom :as lpom]
-            [leiningen.deploy :as ldeploy]))
+            [leiningen.deploy :as ldeploy]
+            [clojure.java.io :as io]))
 
 (defn exit [message]
   (leiningen.core.main/info message)
@@ -20,11 +21,18 @@
 (defn get-group-name [project]
   (format "%s/%s" (:group project) (:name project)))
 
+(defn get-uberjar-path [project]
+  (format "%s/%s" (:target-path project)(:uberjar-name project)))
+
+(defn uberjar? [uberjar]
+  (.exists (io/as-file uberjar)))
+
 (defn deploy-uberjar
   "Deploy uberjar to the given repository"
   [project & args]
-  (let [repo (first args) ]
+  (let [repo (first args)
+        uberjar (get-uberjar-path project)]
     (verify-repo project repo)
-    (ldeploy/deploy project repo (get-group-name project) (:version project)
-                    (luber/uberjar project)
-                    (lpom/pom project))))
+    (if (uberjar? uberjar)
+      (ldeploy/deploy project repo (get-group-name project) (:version project) uberjar (lpom/pom project))
+      (exit "uberjar does not exist, try lein uberjar first"))))

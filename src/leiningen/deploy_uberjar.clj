@@ -22,7 +22,8 @@
   (format "%s/%s" (:group project) (:name project)))
 
 (defn get-uberjar-path [project]
-  (format "%s/%s" (:target-path project)(:uberjar-name project)))
+  (format (format "%s/%s" (:target-path project)(:uberjar-name project))
+          (:version project)))
 
 (defn uberjar? [uberjar]
   (.exists (io/as-file uberjar)))
